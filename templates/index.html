@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>暢銷榜趨勢｜博客來 × 誠品</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Noto Sans TC", Arial, sans-serif; margin: 24px; }
+    header { margin-bottom: 16px; }
+    form input[type=text]{ width: 320px; padding: 8px; }
+    form select, form label { margin-left: 8px; }
+    .hint { color: #555; font-size: 14px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 8px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
+    .status-ok { color: #0a7f49; font-weight: 600; }
+    .status-bad { color: #cc3344; font-weight: 600; }
+    img { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>博客來 × 誠品｜暢銷榜趨勢查詢</h1>
+  <p class="hint">輸入書名（或關鍵字），查是否上榜，並查看近三個月與半年趨勢。</p>
+</header>
+
+<form method="get" action="/">
+  <input type="text" name="q" placeholder="輸入書名或關鍵字" value="{{ query|e }}">
+  <label>通路
+    <select name="channel">
+      <option value="all" {{ 'selected' if channel=='all' else '' }}>全部</option>
+      <option value="books_com_tw" {{ 'selected' if channel=='books_com_tw' else '' }}>博客來</option>
+      <option value="eslite" {{ 'selected' if channel=='eslite' else '' }}>誠品</option>
+    </select>
+  </label>
+  <label>分類
+    <select name="cat">
+      <option value="all" {{ 'selected' if cat=='all' else '' }}>全部</option>
+      <option value="art_design" {{ 'selected' if cat=='art_design' else '' }}>藝術設計</option>
+      <option value="humanities" {{ 'selected' if cat=='humanities' else '' }}>人文社科</option>
+    </select>
+  </label>
+  <label><input type="checkbox" name="exact" value="1" {{ 'checked' if exact=='1' else '' }}> 精準比對</label>
+  <button type="submit">搜尋</button>
+</form>
+
+{% if query %}
+  <div class="card">
+    <h2>搜尋結果：{{ query|e }}</h2>
+    {% if status %}
+      {% if status.on_chart %}
+        <p class="status-ok">✔ 目前（{{ status.latest_date }}）有上榜，當日最佳名次 #{{ status.best_rank_today }}</p>
+      {% else %}
+        <p class="status-bad">✘ 目前沒有上榜紀錄（或資料尚未更新到今天）</p>
+      {% endif %}
+    {% else %}
+      <p class="status-bad">查無上榜紀錄（請嘗試關鍵字、取消精準比對，或等待更多日資料）</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>趨勢圖</h3>
+    <div>
+      <p>近三個月（90天）</p>
+      <img src="/chart.png?q={{ query|urlencode }}&days=90&channel={{ channel }}&cat={{ cat }}&exact={{ exact }}" alt="90天趨勢圖">
+    </div>
+    <div style="margin-top:16px;">
+      <p>近半年（180天）</p>
+      <img src="/chart.png?q={{ query|urlencode }}&days=180&channel={{ channel }}&cat={{ cat }}&exact={{ exact }}" alt="180天趨勢圖">
+    </div>
+  </div>
+
+  {% if results %}
+  <div class="card">
+    <h3>命中紀錄（照日期與名次排序）</h3>
+    <table>
+      <thead><tr><th>日期</th><th>通路</th><th>分類</th><th>名次</th><th>書名</th></tr></thead>
+      <tbody>
+        {% for r in results %}
+          <tr>
+            <td>{{ r.date }}</td>
+            <td>{{ '博客來' if r.channel=='books_com_tw' else '誠品' }}</td>
+            <td>{{ '藝術設計' if r.list_name=='art_design' else '人文社科' }}</td>
+            <td>#{{ r.rank }}</td>
+            <td>{% if r.url %}<a href="{{ r.url }}" target="_blank" rel="noopener">{{ r.title }}</a>{% else %}{{ r.title }}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+{% endif %}
+
+<footer class="hint" style="margin-top:24px;">
+  <p>提示：需先用 <code>python fetch_bestsellers.py</code> 擷取資料，CSV 會累積在 <code>data/bestsellers.csv</code>。</p>
+</footer>
+</body>
+</html>

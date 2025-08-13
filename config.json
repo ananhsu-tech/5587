@@ -1,0 +1,23 @@
+{
+  "max_rank": 20,
+  "request_timeout": 15,
+  "delay_seconds_min": 2.0,
+  "delay_seconds_max": 4.0,
+  "user_agent": "Mozilla/5.0 (compatible; BestsellerTrendsBot/1.0; +https://example.com/bot-info)",
+  "channels": {
+    "books_com_tw": {
+      "enabled": true,
+      "lists": {
+        "art_design": "https://www.books.com.tw/web/sys_saletopb/books/",
+        "humanities": "https://www.books.com.tw/web/sys_saletopb/books/"
+      }
+    },
+    "eslite": {
+      "enabled": true,
+      "lists": {
+        "art_design": "https://www.eslite.com/bestseller",
+        "humanities": "https://www.eslite.com/bestseller"
+      }
+    }
+  }
+}
