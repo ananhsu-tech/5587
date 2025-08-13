@@ -8,15 +8,15 @@
     "books_com_tw": {
       "enabled": true,
       "lists": {
-        "art_design": "https://www.books.com.tw/web/sys_saletopb/books/",
-        "humanities": "https://www.books.com.tw/web/sys_saletopb/books/"
+        "art_design": "https://www.books.com.tw/web/sys_saletopb/books/03/?loc=P_0083_001",
+        "humanities": "https://www.books.com.tw/web/sys_saletopb/books/04/?loc=P_0002_005"
       }
     },
     "eslite": {
       "enabled": true,
       "lists": {
-        "art_design": "https://www.eslite.com/bestseller",
-        "humanities": "https://www.eslite.com/bestseller"
+        "art_design": "https://www.eslite.com/best-sellers/online/3/4",
+        "humanities": "https://www.eslite.com/best-sellers/online/3/61"
       }
     }
   }
